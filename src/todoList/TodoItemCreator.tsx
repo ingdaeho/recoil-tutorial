@@ -1,0 +1,44 @@
+import { useState } from 'react';
+import { SetterOrUpdater, useSetRecoilState } from 'recoil';
+import { todoListState } from '../atom';
+
+export interface ITodoItem {
+  id: number;
+  text: string;
+  isComplete: boolean;
+}
+
+const TodoItemCreator = () => {
+  const [inputValue, setInputValue] = useState('');
+  const setTodoList = useSetRecoilState<ITodoItem[]>(todoListState);
+
+  const addItem = () => {
+    setTodoList((oldTodoList) => [
+      ...oldTodoList,
+      {
+        id: getId(),
+        text: inputValue,
+        isComplete: false,
+      },
+    ]);
+    setInputValue('');
+  };
+
+  const onChange = ({ target: { value } }: any) => {
+    setInputValue(value);
+  };
+
+  return (
+    <div>
+      <input type="text" value={inputValue} onChange={onChange} />
+      <button onClick={addItem}>Add</button>
+    </div>
+  );
+};
+
+export default TodoItemCreator;
+
+let id = 0;
+function getId() {
+  return id++;
+}
